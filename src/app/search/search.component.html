@@ -1,0 +1,74 @@
+<nav class=" navbar navbar-expand-lg bg-custom shadow ">
+    <div class="container-fluid">
+        <a class="navbar-brand shadow" href="home">
+            <img src="assets/online_shop_16.jpg" alt="logo" class="rounded img-thumbnail logo-size">
+        </a>
+        <div class="input-group w-25">
+            <input type="search" class="form-control rounded" placeholder="Tìm kiếm sản phẩm..." aria-label="Search"
+                aria-describedby="search-addon" #search="ngModel" ngModel />
+            <button type="button" class="btn btn-outline-success" data-mdb-ripple-init
+                (click)="findProductByName(search.value)">Tìm</button>
+        </div>
+    </div>
+</nav>
+
+<div class="container bg-product mt-3 shadow rounded">
+    <div class="row">
+        <div *ngIf="foundProducts;else notFound ">
+            <div class="col-md-4 mt-3" *ngFor="let product of foundProducts">
+                <div class="card shadow rounded">
+                    <img src={{product.imageUrl}} class="card-img-top" alt="Sản phẩm 2">
+                    <div class="card-body">
+                        <h5 class="card-title">{{product.name}}</h5>
+                        <p class="card-text">{{product.description}}</p>
+                        <p class="card-text">Giá bán 1kg: {{product.price}}.000</p>
+                        <a class="btn btn-outline-primary float-end" data-bs-toggle="modal"
+                            data-bs-target="#addCartModal"
+                            (click)="getProductBySelectedProductId(product.productId)">Thêm vào giỏ hàng</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #notFound>
+            <h3 class="text-primary">Không tìm thấy sản phẩm</h3>
+        </ng-template>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="addCartModal">
+    
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title  text-secondary">Đặt hàng</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+
+            <div class="modal-body text-center" *ngIf="selectedProduct">
+                <div *ngIf="errorMessage" class="alert alert-danger mt-3"> {{ errorMessage }} </div>
+                <div *ngIf="successMessage" class="alert alert-success mt-3"> {{ successMessage }} </div>
+                <img [src]="selectedProduct.data.imageUrl" alt="Ảnh sản phẩm" class="img-fluid rounded mb-3">
+                <h3>{{selectedProduct.data.name}}</h3>
+                <p>{{selectedProduct.data.description}}</p>
+                <p class="text-primary"><strong>Giá bán 1kg: {{selectedProduct.data.price}}.000 VND</strong></p>
+                <div class="input-group w-50 mx-auto">
+                    <span class="input-group-text">Số lượng</span>
+                    <button class="btn btn-outline-secondary" type="button" (click)="decreaseTotalAmount()">-</button>
+                    <input type="text" class="form-control text-center" [value]="amount" readonly>
+                    <button class="btn btn-outline-secondary" type="button" (click)="increaseTotalAmount()">+</button>
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <button class="btn btn-warning" (click)="saveOrder(selectedProduct.data.productId, selectedProduct.data.price)">Đặt hàng</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Để sau</button>
+            </div>
+        </div>
+    </div>
+</div>

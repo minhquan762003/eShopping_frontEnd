@@ -1,0 +1,55 @@
+<div class="container">
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="card rounded shadow size-login bg-custom text-center h-50">
+            <div class="card-header">
+                <h1 class="text-success">Login</h1>
+            </div>
+
+            <div class="card-body ">
+                <div *ngIf="errorMessage" class="alert alert-danger mt-3"> {{ errorMessage }} </div>
+                <div *ngIf="successMessage" class="alert alert-success mt-3"> {{ successMessage }} </div>
+                <form #usersForm="ngForm" (ngSubmit)="login(usersForm.value)" novalidate>
+                    <div class="form-floating  mt-5 w-75 mx-auto">
+                        <input type="text" class="form-control " name="username" id="formId1" placeholder="" ngModel
+                            required minlength="5" />
+                        <label for="formId1">User Name</label>
+                        <div *ngIf="usersForm.submitted || usersForm.controls['username']?.touched">
+                            <div *ngIf="usersForm.controls['username']?.errors?.['required']"
+                                class="text-danger float-start">
+                                Username là bắt buộc
+                            </div>
+                        </div>
+
+                        <div *ngIf="usersForm.controls['username']?.errors?.['minlength']"
+                            class="text-danger float-start">
+                            Tối thiểu 5 kí tự
+                        </div>
+                    </div>
+                    <div class="form-floating  mt-3 w-75 mx-auto">
+                        <input type="text" class="form-control " name="password" id="formId2" placeholder="" ngModel
+                            required minlength="5" />
+                        <label for="formId2">Password</label>
+
+                        <div *ngIf="usersForm.submitted || usersForm.controls['password']?.touched">
+                            <div *ngIf="usersForm.controls['password']?.errors?.['required']"
+                                class="text-danger float-start">
+                                Password là bắt buộc
+                            </div>
+                        </div>
+
+                        <div *ngIf="usersForm.controls['password']?.errors?.['minlength']"
+                            class="text-danger float-start">
+                            Tối thiểu 5 kí tự
+                        </div>
+                    </div>
+                    <a href="register" class="text-primary">Bạn chưa có tài khoản, hãy bấm vô đây để đăng ký nhé!</a>
+                    <div class="position-relative">
+                        <input type="submit" value="Login"
+                            class="btn btn-outline-success mt-5 position-absolute top-50 start-50 translate-middle"
+                            [disabled]="usersForm.invalid">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

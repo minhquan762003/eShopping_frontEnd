@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-custom shadow mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand shadow" href="home">
+            <img src="assets/online_shop_16.jpg" alt="logo" class="rounded img-thumbnail logo-size">
+        </a>
+    </div>
+</nav>
+
+<div class="container bg-custom mt-3 shadow rounded">
+    <div class="row">
+        <div *ngIf="orderItemsList.length !== 0; else nothingTemplate">
+            <div *ngFor="let orderItemByOrderIds of orderItemsList">
+                <div *ngFor="let orderItemByOrderId of orderItemByOrderIds; let i = index">
+                    <div class="card shadow rounded mt-3 p-3">
+                        <div class="row align-items-center">
+                            <div class="col-1 text-center">
+                                <h5 class="text-center mt-4">{{i + 1}}</h5>
+                            </div>
+                            <div class="col-2">
+                                <div class="card rounded shadow-sm p-2">
+                                    <img src={{orderItemByOrderId.product.imageUrl}} alt="ảnh sản phẩm" class="img-fluid rounded">
+                                </div>
+                                <h6 class="text-success mt-2">Tên sản phẩm: {{orderItemByOrderId.product.name}}</h6>
+                            </div>
+                            <div class="col-2">
+                                <h6 class="text-success">Số lượng: {{orderItemByOrderId.quantity}}</h6>
+                            </div>
+                            <div class="col-3">
+                                <h6 class="text-success">Tổng số tiền thanh toán: {{orderItemByOrderId.price}}.000</h6>
+                            </div>
+                            <div class="col-2">
+                                <h6 class="text-success">Ngày đặt: {{orderItemByOrderId.order.createdAt | date: 'HH:mm dd-MM-yyyy'}}</h6>
+                            </div>
+                            <div class="col-2">
+                                <h6 class="text-success">Trạng thái đơn hàng: {{orderItemByOrderId.order.status}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #nothingTemplate>
+            <h4 class="text-center text-danger">Chưa có đơn hàng nào, ấn bên dưới để mua hàng nhé</h4>
+            <h4 class="text-center "><a href="product">Sản phẩm</a></h4>
+        </ng-template>
+
+    </div>
+</div>

@@ -1,0 +1,82 @@
+<div class="container">
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="card w-50 h-75 shadow rounded">
+            <div class="card-header">
+                <h1 class="text-success text-center">Register</h1>
+            </div>
+
+            <div class="card-body mt-5">
+                <div *ngIf="errorMessage" class="text-danger mt-3 text-center">
+                    {{errorMessage}}
+                </div>
+                <form #registerForm="ngForm" (ngSubmit)="register(registerForm.value)">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="username" id="formId1" placeholder="" required
+                            ngModel minlength="5" />
+                        <label for="formId1">Username</label>
+                        <div *ngIf="registerForm.submitted || registerForm.controls['username']?.touched">
+                            <div *ngIf="registerForm.controls['username']?.errors?.['required']"
+                                class="text-danger text-center">
+                                Username là bắt buộc
+                            </div>
+                            <div *ngIf="registerForm.controls['username']?.errors?.['minlength']"
+                                class="text-danger text-center">
+                                Tối thiểu 5 kí tự
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="password" id="formId1" placeholder="" required
+                            minlength="5" ngModel #password="ngModel" />
+                        <label for="formId1">Password</label>
+                        <div *ngIf="registerForm.submitted || registerForm.controls['password']?.touched">
+                            <div *ngIf="registerForm.controls['password']?.errors?.['required']"
+                                class="text-danger text-center">
+                                Password là bắt buộc
+                            </div>
+                            <div *ngIf="registerForm.controls['password']?.errors?.['minlength']"
+                                class="text-danger text-center">
+                                Tối thiểu 5 kí tự
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="repassword" id="formId1" placeholder="" required
+                            ngModel #repassword="ngModel" />
+                        <label for="formId1">Repassword</label>
+                        <div *ngIf="registerForm.submitted || registerForm.controls['repassword']?.touched">
+                            <div *ngIf="registerForm.controls['repassword']?.errors?.['required']"
+                                class="text-danger text-center">
+                                Repassword là bắt buộc
+                            </div>
+                            <div *ngIf="password.value !== repassword.value && repassword.touched"
+                                class="text-danger text-center">
+                                Password và Repassword phải giống nhau
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3"> <input type="email" class="form-control" name="email" id="formId4"
+                            placeholder="" required ngModel email #email="ngModel"
+                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" /> <label for="formId4">Email</label>
+                        <div *ngIf="registerForm.submitted || email.touched">
+                            <div *ngIf="email.errors?.['required']" class="text-danger text-center"> Email là bắt buộc
+                            </div>
+                            <div *ngIf="email.errors?.['pattern']" class="text-danger text-center"> Email không đúng
+                                định dạng </div>
+                        </div>
+                    </div>
+                    <a href="login" class="text-primary">
+                        <h6 class="text-center">Bạn đã có tài khoản rồi sao, hãy bấm vô đây để đăng nhập
+                            nhé!</h6>
+                    </a>
+                    <div class="position-relative">
+                        <input type="submit" value="Đăng ký"
+                            class="btn btn-outline-success mt-5 position-absolute top-50 start-50 translate-middle"
+                            [disabled]="registerForm.invalid">
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
