@@ -24,5 +24,9 @@ export const routes: Routes = [
     },{
         path:'search',
         loadComponent:()=>import('./search/search.component').then(m=>m.SearchComponent)
+    },{
+        path:'admin',
+        loadComponent:()=>import('./admin/admin.component').then(m=>m.AdminComponent)
+
     }
 ];

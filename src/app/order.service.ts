@@ -1,21 +1,38 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Order } from './order';
-import { error } from 'console';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-  private http = inject(HttpClient)
+  private authService = inject(AuthService);
+  private http = inject(HttpClient);
+
   private baseUrl = "http://localhost:8080/api/orders";
-  private data:any;
-  constructor() { }
-  saveOrder(order:any){
-    return this.http.post(`${this.baseUrl}`,order);
+
+  constructor() {}
+
+  // Hàm tạo headers động với token
+  private createHeaders(): HttpHeaders {
+    const token = this.authService.getToken(); // Lấy token từ AuthService
+    console.log(token);
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}` // Gắn token vào headers
+    });
   }
-  getAllOrdersByUserId(userId: number):Observable<Order[]>{
-    return this.http.get<Order[]>(`${this.baseUrl}/${userId}`);
+
+  // Lưu đơn hàng
+  saveOrder(order: any): Observable<any> {
+    const headers = this.createHeaders();
+    return this.http.post(`${this.baseUrl}`, order, { headers });
+  }
+
+  // Lấy tất cả đơn hàng theo User ID
+  getAllOrdersByUserId(userId: number): Observable<Order[]> {
+    const headers = this.createHeaders();
+    return this.http.get<Order[]>(`${this.baseUrl}/${userId}`, { headers });
   }
 }

@@ -1,25 +1,28 @@
 import { Injectable } from '@angular/core';
 import { User } from './user';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  
   private currentUser: any = null;
-
-  constructor() {
-    if (this.isBrowser()){
-      const savedUser = localStorage.getItem('currentUser');
+  private token: any;
+  constructor(private cookieService: CookieService) {
+    if (this.isBrowser()) {
+      const savedUser = this.cookieService.get('currentUser');
       if (savedUser) {
         this.currentUser = JSON.parse(savedUser);
       }
     }
   }
-  private isBrowser(): boolean { return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'; }
+  private isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof window.document !== 'undefined';
+  }
+
   setCurrentUser(user: User) {
     this.currentUser = user;
-    
-    localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
   getCurrentUser() {
@@ -28,7 +31,18 @@ export class AuthService {
 
   logOut() {
     this.currentUser = null;
-    localStorage.removeItem('currentUser');
+    this.cookieService.delete('currentUser');
   }
 
+  setToken(token: any) {
+    this.token = token;
+  }
+
+  getToken() {
+
+    if (this.currentUser) {
+      this.token = this.currentUser.token;
+      return this.token;
+    }
+  }
 }

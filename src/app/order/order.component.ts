@@ -33,7 +33,7 @@ export class OrderComponent implements OnInit {
   getAllOrdersByUserId(userId: number) {
     this.orderService.getAllOrdersByUserId(userId).subscribe((res) => {
       this.orders = res;
-      // console.log(this.orders);
+      console.log(this.orders);
       this.processOrders(this.orders);
       
     })

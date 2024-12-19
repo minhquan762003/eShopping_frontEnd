@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit{
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
-    console.log(this.currentUser);
+    // console.log(this.currentUser);
     this.getAllProducts();
   }
   logOut(){
