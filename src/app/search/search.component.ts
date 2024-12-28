@@ -6,29 +6,32 @@ import { FormsModule } from '@angular/forms';
 import { OrderService } from '../order.service';
 import { AuthService } from '../auth.service';
 import { OrderitemService } from '../orderitem.service';
+import { SuggestionService } from '../suggestion.service';
 
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
-export class SearchComponent implements OnInit{
+export class SearchComponent implements OnInit {
   productService = inject(ProductService);
-  nameProduct:any= null;
-  foundProducts:any;
+  nameProduct: any = null;
+  foundProducts: any;
   errorMessage: any;
-  successMessage:any;
-  selectedProduct:any=null;
+  successMessage: any;
+  selectedProduct: any = null;
   amount: number = 1;
   currentUser: any = null;
   orderService = inject(OrderService);
-  authService=inject(AuthService);
+  authService = inject(AuthService);
   data: any;
   newOrderId: any;
-  orderItemService=inject(OrderitemService);
-
+  orderItemService = inject(OrderitemService);
+  suggestionService = inject(SuggestionService);
+  searchQuery: string = '';
+  suggestions: string[] = [];
   ngOnInit(): void {
     this.nameProduct = localStorage.getItem('searchName');
     // console.log(this.nameProduct);
@@ -36,22 +39,22 @@ export class SearchComponent implements OnInit{
     this.currentUser = this.authService.getCurrentUser();
 
   }
-  findProductByName(productName:string){
-    this.productService.findByProductName(productName).subscribe((res)=>{
+  findProductByName(productName: string) {
+    this.productService.findByProductName(productName).subscribe((res) => {
       console.log(res);
       this.foundProducts = res;
-    },error=>{
+    }, error => {
       console.log("Loi tim kiem");
     }
-  );
+    );
   }
-  getProductBySelectedProductId(id:any){
-    this.productService.findByProductId(id).subscribe((res)=>{
+  getProductBySelectedProductId(id: any) {
+    this.productService.findByProductId(id).subscribe((res) => {
       this.selectedProduct = res;
       console.log(this.selectedProduct.data);
       this.successMessage = null;
       this.errorMessage = null;
-    },error=>{
+    }, error => {
       console.log("Loi id");
     })
   }
@@ -78,7 +81,7 @@ export class SearchComponent implements OnInit{
       console.log(this.newOrderId);
       console.log(productId);
       this.saveOrderItem(this.newOrderId, productId, this.amount, price);
-    },error=>{
+    }, error => {
       this.errorMessage = "Đặt hàng thất bại";
       console.log(error);
     });
@@ -98,5 +101,19 @@ export class SearchComponent implements OnInit{
       this.errorMessage = "Đặt hàng thất bại";
       console.log(error)
     }
+  }
+  onSearchChange(query: string) {
+    this.searchQuery = query;
+    if (query.trim()) {
+      this.suggestionService.getSuggestions(query).subscribe(response => {
+        this.suggestions = response.suggestions;
+      });
+    } else {
+      this.suggestions = [];
+    }
+  }
+  selectSuggestion(suggestion: string) {
+    this.searchQuery = suggestion;
+    this.suggestions = []; // Ẩn gợi ý sau khi chọn
   }
 }

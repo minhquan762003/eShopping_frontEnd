@@ -35,4 +35,9 @@ export class OrderService {
     const headers = this.createHeaders();
     return this.http.get<Order[]>(`${this.baseUrl}/${userId}`, { headers });
   }
+
+  deleteOrderByOrderId(orderId:any){
+    const headers = this.createHeaders();
+    return this.http.delete(`${this.baseUrl}/delete/${orderId}`,{headers});
+  }
 }

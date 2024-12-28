@@ -3,11 +3,20 @@
         <a class="navbar-brand shadow" href="home">
             <img src="assets/online_shop_16.jpg" alt="logo" class="rounded img-thumbnail logo-size">
         </a>
-        <div class="input-group w-25">
-            <input type="search" class="form-control rounded" placeholder="Tìm kiếm sản phẩm..." aria-label="Search"
+        <div class="input-group w-25 position-relative">
+            <input type="search" class="form-control rounded" [(ngModel)]="searchQuery"
+                (ngModelChange)="onSearchChange($event)" placeholder="Tìm kiếm sản phẩm..." aria-label="Search"
                 aria-describedby="search-addon" #search="ngModel" ngModel />
             <button type="button" class="btn btn-outline-success" data-mdb-ripple-init
                 (click)="findProductByName(search.value)">Tìm</button>
+
+            <!-- Danh sách gợi ý -->
+            <ul class="list-group position-absolute mt-5 w-100" *ngIf="suggestions.length > 0">
+                <li class="list-group-item list-group-item-action" *ngFor="let suggestion of suggestions"
+                    (click)="selectSuggestion(suggestion)">
+                    {{ suggestion }}
+                </li>
+            </ul>
         </div>
     </div>
 </nav>
@@ -39,7 +48,7 @@
 
 
 <div class="modal fade" id="addCartModal">
-    
+
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
@@ -66,7 +75,8 @@
 
 
             <div class="modal-footer">
-                <button class="btn btn-warning" (click)="saveOrder(selectedProduct.data.productId, selectedProduct.data.price)">Đặt hàng</button>
+                <button class="btn btn-warning"
+                    (click)="saveOrder(selectedProduct.data.productId, selectedProduct.data.price)">Đặt hàng</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Để sau</button>
             </div>
         </div>

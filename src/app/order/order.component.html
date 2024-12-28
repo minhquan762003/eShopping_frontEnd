@@ -8,41 +8,126 @@
 
 <div class="container bg-custom mt-3 shadow rounded">
     <div class="row">
-        <div *ngIf="orderItemsList.length !== 0; else nothingTemplate">
-            <div *ngFor="let orderItemByOrderIds of orderItemsList">
-                <div *ngFor="let orderItemByOrderId of orderItemByOrderIds; let i = index">
-                    <div class="card shadow rounded mt-3 p-3">
-                        <div class="row align-items-center">
-                            <div class="col-1 text-center">
-                                <h5 class="text-center mt-4">{{i + 1}}</h5>
-                            </div>
-                            <div class="col-2">
-                                <div class="card rounded shadow-sm p-2">
-                                    <img src={{orderItemByOrderId.product.imageUrl}} alt="ảnh sản phẩm" class="img-fluid rounded">
+        <!-- <div *ngIf="orderList.length !== 0; else nothingTemplate"> -->
+        <div *ngIf="successMessage" class="alert alert-success mt-3"> {{ successMessage }} </div>
+        <div *ngFor="let order of orders; let i = index">
+            <div>
+                <!-- Tiêu đề Đơn hàng -->
+                <h3>
+                    <button class="btn btn-link text-decoration-none" type="button" data-bs-toggle="collapse"
+                        [attr.data-bs-target]="'#orderItemsCollapse' + i" (click)="getSelectedOrderId(order.orderId)">
+                        <i class="bi bi-box"></i> Đơn hàng {{i + 1}}
+                    </button>
+                </h3>
+
+
+                <div [id]="'orderItemsCollapse' + i" class="collapse">
+                    <div *ngFor="let orderItem of orderItems">
+                        <div class="card shadow rounded mt-3 p-3">
+                            <div class="row align-items-center">
+                                <div class="col-12 col-md-2">
+                                    <div class="card rounded shadow-sm p-2">
+                                        <img src="{{orderItem.product.imageUrl}}" alt="ảnh sản phẩm"
+                                            class="img-fluid rounded">
+                                    </div>
+                                    <h6 class="text-success mt-2">Tên sản phẩm: {{orderItem.product.name}}
+                                    </h6>
                                 </div>
-                                <h6 class="text-success mt-2">Tên sản phẩm: {{orderItemByOrderId.product.name}}</h6>
-                            </div>
-                            <div class="col-2">
-                                <h6 class="text-success">Số lượng: {{orderItemByOrderId.quantity}}</h6>
-                            </div>
-                            <div class="col-3">
-                                <h6 class="text-success">Tổng số tiền thanh toán: {{orderItemByOrderId.price}}.000</h6>
-                            </div>
-                            <div class="col-2">
-                                <h6 class="text-success">Ngày đặt: {{orderItemByOrderId.order.createdAt | date: 'HH:mm dd-MM-yyyy'}}</h6>
-                            </div>
-                            <div class="col-2">
-                                <h6 class="text-success">Trạng thái đơn hàng: {{orderItemByOrderId.order.status}}</h6>
+                                <div class="col-6 col-md-2">
+                                    <h6 class="text-success">Số lượng: {{orderItem.quantity}}</h6>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <h6 class="text-success">Tổng số tiền: {{orderItem.price}}.000 VND</h6>
+                                </div>
+                                <div class="col-12 col-md-2">
+                                    <h6 class="text-success">Ngày đặt: {{orderItem.order.createdAt | date:
+                                        'HH:mm dd-MM-yyyy'}}</h6>
+                                </div>
+                                <div class="col-12 col-md-2">
+                                    <h6 class="text-success">Trạng thái: {{orderItem.order.status}}</h6>
+                                </div>
+                                <div class="col-12 col-md-1 text-center">
+                                    <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                                        data-bs-target="#deleteMatHang"
+                                        (click)="getSelectedOrderItemId(orderItem.orderItemId)">
+                                        <i class="bi bi-trash"></i> Hủy mặt hàng
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div [id]="'orderItemsCollapse' + i" class="collapse">
+                    <div class="text-center">
+                        <button class="btn btn-outline-danger btn-lg mt-3" data-bs-toggle="modal"
+                            data-bs-target="#deleteDonHang">
+                            <i class="bi bi-cart-x"></i> Hủy đơn hàng
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
         <ng-template #nothingTemplate>
-            <h4 class="text-center text-danger">Chưa có đơn hàng nào, ấn bên dưới để mua hàng nhé</h4>
-            <h4 class="text-center "><a href="product">Sản phẩm</a></h4>
+            <div class="alert alert-warning mt-3" role="alert">
+                Không có đơn hàng nào.
+            </div>
         </ng-template>
+    </div>
+</div>
 
+
+
+
+
+<div class="modal fade" id="deleteMatHang">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title text-danger">Hủy mặt hàng</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body" *ngIf="selectedOrderItemId">
+                Bạn chắc chắn muốn hủy mặt hàng này chứ?
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button class="btn btn-warning" data-bs-dismiss="modal"
+                    (click)="deleteSelectedOrderItemByOrderItemId(selectedOrderItemId)">Yes</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="deleteDonHang">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title text-danger">Hủy đơn hàng</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body" *ngIf="">
+                Bạn chắc chắn muốn hủy đơn hàng này chứ?
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button class="btn btn-warning" data-bs-dismiss="modal"
+                    (click)="deleteSelectedOrderByOrderId(selectedOrderId)">Yes</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
     </div>
 </div>

@@ -33,4 +33,8 @@ export class ProductService {
     const headers = this.createHeaders();
     return this.http.get(`${this.baseUrl}/${productId}`, { headers });
   }
+  findByCategory(category:string){
+    const headers = this.createHeaders();
+    return this.http.get(`${this.baseUrl}/category/${category}`, {headers});
+  }
 }

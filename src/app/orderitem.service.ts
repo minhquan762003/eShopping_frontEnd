@@ -25,4 +25,9 @@ export class OrderitemService {
 
     return this.http.post(`${this.baseUrl}`,data,{headers});
   }
+
+  deleteOrderItemByOrderItemId(orderItemId:any){
+    const headers = this.createHeaders();
+    return this.http.delete(`${this.baseUrl}/delete/${orderItemId}`, {headers})
+  }
 }

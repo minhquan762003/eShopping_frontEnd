@@ -5,6 +5,7 @@ import { AuthService } from '../auth.service';
 import { CommonModule } from '@angular/common';
 import { OrderitemService } from '../orderitem.service';
 import { error } from 'console';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order',
@@ -19,39 +20,103 @@ export class OrderComponent implements OnInit {
   authService = inject(AuthService);
   currentUser: any = null;
   orderItemService = inject(OrderitemService);
-  orderItemsList: any =[];
-  
+
+  orderItems: any;
+  selectedOrderItemId: any;
+  selectedOrderId: any;
+  successMessage: any;
+  respone: any;
+
+  orderList:  any[] = [];
+  constructor(private router: Router) { }
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     if (this.currentUser && this.currentUser.userId) {
       this.getAllOrdersByUserId(this.currentUser.userId);
-    }else{
-      console.error;  
+    } else {
+      console.error;
     }
   }
 
   getAllOrdersByUserId(userId: number) {
     this.orderService.getAllOrdersByUserId(userId).subscribe((res) => {
       this.orders = res;
+      this.orderList = this.orders
       console.log(this.orders);
-      this.processOrders(this.orders);
-      
+      // this.processOrders(this.orders);
+
     })
   }
 
-  getAllOrdersItemByOrderId(orderId:number){
-    return this.orderItemService.getAllOrderItemsByOrderId(orderId).toPromise();
+  getAllOrdersItemByOrderId(orderId: number) {
+    return this.orderItemService.getAllOrderItemsByOrderId(orderId).subscribe((res) => {
+      // console.log(res);
+      this.orderItems = res;
+    });
   }
 
-  processOrders(orders: any[]){
-    const request = orders.map(order => 
-      this.getAllOrdersItemByOrderId(order.orderId)
+  // getAllOrdersItemByOrderId(orderId: number) {
+  //   return this.orderItemService.getAllOrderItemsByOrderId(orderId).toPromise();
+  // }
+
+  // processOrders(orders: any[]) {
+  //   const request = orders.map(order =>
+  //     this.getAllOrdersItemByOrderId(order.orderId)
+  //   );
+  //   Promise.all(request).then(results => {
+  //     this.orderItemsList = results;
+  //     console.log(this.orderItemsList);
+  //   }).catch(error => {
+  //     console.error("Loi xu ly orders");
+  //   })
+  // }
+
+  getSelectedOrderItemId(orderItemId: any) {
+    this.selectedOrderItemId = orderItemId;
+    console.log(this.selectedOrderItemId);
+  }
+
+  getSelectedOrderId(orderId: any) {
+    this.selectedOrderId = orderId;
+    // console.log(this.selectedOrderId);
+    this.getAllOrdersItemByOrderId(this.selectedOrderId);
+    this.successMessage = null;
+  }
+
+  deleteSelectedOrderItemByOrderItemId(orderItemId: any) {
+    this.orderItemService.deleteOrderItemByOrderItemId(orderItemId).subscribe(
+      (res) => {
+        console.log(res);
+        this.respone = res;
+  
+        if (this.respone.status === 'ok') {
+          this.successMessage = 'Hủy mặt hàng thành công';
+          // Cập nhật danh sách order items
+          this.getAllOrdersItemByOrderId(this.selectedOrderId);
+        }
+      },
+      (err) => {
+        console.error('Lỗi khi xóa mặt hàng:', err);
+      }
     );
-    Promise.all(request).then(results =>{
-      this.orderItemsList = results;
-      console.log(this.orderItemsList);
-    }).catch(error=>{
-      console.error("Loi xu ly orders");
-    })
   }
+  
+  deleteSelectedOrderByOrderId(orderId: any) {
+    this.orderService.deleteOrderByOrderId(orderId).subscribe(
+      (res) => {
+        console.log(res);
+        this.respone = res;
+  
+        if (this.respone.status === 'ok') {
+          this.successMessage = 'Xóa đơn hàng thành công';
+          // Cập nhật danh sách đơn hàng
+          this.getAllOrdersByUserId(this.currentUser.userId);
+        }
+      },
+      (err) => {
+        console.error('Lỗi khi xóa đơn hàng:', err);
+      }
+    );
+  }
+  
 }
