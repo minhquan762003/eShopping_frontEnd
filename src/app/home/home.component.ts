@@ -69,19 +69,21 @@ export class HomeComponent implements OnInit{
     this.suggestions = []; // Ẩn gợi ý sau khi chọn
   }
 
-  onCheckboxChange(event: Event): void {
-    const checkbox = event.target as HTMLInputElement;
-    if (checkbox.checked) {
-      // console.log(checkbox.value);
-      this.productService.findByCategory(checkbox.value).subscribe((res)=>{
-        // console.log(res);
-        this.dataCategory = res;
-        this.products = this.dataCategory.data;
-      });
-      // console.log('Checkbox đã được tích.');
+  onRadioChange(event: Event): void {
+    const radio = event.target as HTMLInputElement;
+    if (radio.checked) {
+      if(radio.value == "all"){
+        this.getAllProducts();
+      }
+      else{
+        this.productService.findByCategory(radio.value).subscribe((res)=>{
+          this.dataCategory = res;
+          this.products = this.dataCategory.data;
+        });
+      }
+
     } else {
       this.getAllProducts();
-      // console.log('Checkbox đã được bỏ tích.');
     }
   }
   

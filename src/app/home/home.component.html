@@ -11,7 +11,7 @@
                     <a class="nav-link " href="product">Sản phẩm</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="order">Giỏ hàng</a>
+                    <a class="nav-link text" href="order">Giỏ hàng</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Đăng xuất</a>
@@ -33,10 +33,10 @@
                     <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#warningLoginModal">Giỏ hàng</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text" href="register">Đăng ký</a>
+                    <a class="nav-link " href="register">Đăng ký</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text" href="login">Đăng nhập</a>
+                    <a class="nav-link " href="login">Đăng nhập</a>
                 </li>
             </ul>
         </ng-template>
@@ -68,39 +68,49 @@
     <div class="me-3">
         <h5>Theo danh mục sản phẩm</h5>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="interior" id="flexCheckDefault"
-                (change)="onCheckboxChange($event)">
-            <label class="form-check-label" for="flexCheckDefault">
-                Đồ gia dụng
+            <input class="form-check-input" type="radio" name="category" value="interior" id="flexRadioDefault"
+                (change)="onRadioChange($event)">
+            <label class="form-check-label" for="flexRadioDefault">
+                Đồ nội thất
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="food" id="flexCheckDefault1"
-                (change)="onCheckboxChange($event)">
-            <label class="form-check-label" for="flexCheckDefault1">
+            <input class="form-check-input" type="radio" name="category" value="food" id="flexRadioDefault1"
+                (change)="onRadioChange($event)">
+            <label class="form-check-label" for="flexRadioDefault1">
                 Đồ ăn
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="clother" id="flexCheckDefault2"
-                (change)="onCheckboxChange($event)" value="">
-            <label class="form-check-label" for="flexCheckDefault22">
-                Quần áo 
+            <input class="form-check-input" type="radio" name="category" value="clother" id="flexRadioDefault2"
+                (change)="onRadioChange($event)">
+            <label class="form-check-label" for="flexRadioDefault2">
+                Quần áo
             </label>
         </div>
-        
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="category" value="all" id="flexRadioDefault3"
+                (change)="onRadioChange($event)" checked>
+            <label class="form-check-label" for="flexRadioDefault3">
+                Tất cả
+            </label>
+        </div>
+
+
 
     </div>
     <div class="container bg-product shadow rounded flex-grow-1">
         <div class="row">
             <div class="col-md-4 mt-3" *ngFor="let product of products">
                 <div class="card shadow rounded">
-                    <img src={{product.imageUrl}} class="card-img-top" alt="Sản phẩm 2">
+                    <img src={{product.imageUrl}} class="card-img-top image-product" alt="Sản phẩm 2">
                     <div class="card-body">
                         <h5 class="card-title">{{product.name}}</h5>
                         <p class="card-text">{{product.description}}</p>
                         <p class="card-text">Giá bán 1kg: {{product.price}}.000</p>
-                        <!-- <a href="product" class="btn btn-primary">Mua ngay</a> -->
+                        <div *ngIf="currentUser">
+                            <a href="product" class="btn btn-primary">Mua ngay</a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -15,3 +15,19 @@
     width: 100px;
     height: 100px;
 }
+
+.image-product {
+    width: 100%;
+    /* Đặt chiều rộng ảnh theo container */
+    height: 200px;
+    /* Chiều cao cố định */
+    object-fit: fill;
+    /* Kéo giãn ảnh */
+    border-radius: 8px;
+}
+.list-group {
+    z-index: 1000;
+    /* Đảm bảo gợi ý luôn nổi trên các phần tử khác */
+    background: white;
+    cursor: pointer;
+}

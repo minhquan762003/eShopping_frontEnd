@@ -3,46 +3,67 @@
         <a class="navbar-brand shadow" href="home">
             <img src="assets/online_shop_16.jpg" alt="logo" class="rounded img-thumbnail logo-size">
         </a>
-        <div class="input-group w-25 position-relative">
-            <input type="search" class="form-control rounded" [(ngModel)]="searchQuery"
-                (ngModelChange)="onSearchChange($event)" placeholder="Tìm kiếm sản phẩm..." aria-label="Search"
-                aria-describedby="search-addon" #search="ngModel" ngModel />
-            <button type="button" class="btn btn-outline-success" data-mdb-ripple-init
-                (click)="findProductByName(search.value)">Tìm</button>
 
-            <!-- Danh sách gợi ý -->
-            <ul class="list-group position-absolute mt-5 w-100" *ngIf="suggestions.length > 0">
-                <li class="list-group-item list-group-item-action" *ngFor="let suggestion of suggestions"
-                    (click)="selectSuggestion(suggestion)">
-                    {{ suggestion }}
+        <div>
+            
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link " href="home">Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="product">Sản phẩm</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="order">Giỏ hàng</a>
                 </li>
             </ul>
         </div>
+
+    </div>
+    <div class="input-group w-25 position-relative">
+        <input type="search" class="form-control rounded" [(ngModel)]="searchQuery"
+            (ngModelChange)="onSearchChange($event)" placeholder="Tìm kiếm sản phẩm..." aria-label="Search"
+            aria-describedby="search-addon" #search="ngModel" ngModel />
+        <button type="button" class="btn btn-outline-success" data-mdb-ripple-init
+            (click)="findProductByName(search.value)">Tìm</button>
+
+        <!-- Danh sách gợi ý -->
+        <ul class="list-group position-absolute mt-5 w-100" *ngIf="suggestions.length > 0">
+            <li class="list-group-item list-group-item-action" *ngFor="let suggestion of suggestions"
+                (click)="selectSuggestion(suggestion)">
+                {{ suggestion }}
+            </li>
+        </ul>
     </div>
 </nav>
 
 <div class="container bg-product mt-3 shadow rounded">
     <div class="row">
-        <div *ngIf="foundProducts;else notFound ">
-            <div class="col-md-4 mt-3" *ngFor="let product of foundProducts">
-                <div class="card shadow rounded">
-                    <img src={{product.imageUrl}} class="card-img-top" alt="Sản phẩm 2">
-                    <div class="card-body">
-                        <h5 class="card-title">{{product.name}}</h5>
-                        <p class="card-text">{{product.description}}</p>
-                        <p class="card-text">Giá bán 1kg: {{product.price}}.000</p>
-                        <a class="btn btn-outline-primary float-end" data-bs-toggle="modal"
-                            data-bs-target="#addCartModal"
-                            (click)="getProductBySelectedProductId(product.productId)">Thêm vào giỏ hàng</a>
+        <div *ngIf="foundProducts.length > 0; else notFound">
+            <!-- Sử dụng Bootstrap Grid -->
+            <div class="row">
+                <div class="col-md-4 bg-transparent" *ngFor="let product of foundProducts">
+                    <div class="card mt-3 shadow rounded">
+                        <img src={{product.imageUrl}} class="card-img-top image-product" alt="Sản phẩm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{product.name}}</h5>
+                            <p class="card-text">{{product.description}}</p>
+                            <p class="card-text">Giá bán 1kg: {{product.price}}.000</p>
+                            <a class="btn btn-outline-primary float-end" data-bs-toggle="modal"
+                                data-bs-target="#addCartModal"
+                                (click)="getProductBySelectedProductId(product.productId)">Thêm vào giỏ hàng</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <ng-template #notFound>
-            <h3 class="text-primary">Không tìm thấy sản phẩm</h3>
+            <h3 class="text-danger">Không tìm thấy sản phẩm</h3>
         </ng-template>
     </div>
 </div>
+
 
 
 

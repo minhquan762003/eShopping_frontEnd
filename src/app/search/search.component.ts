@@ -18,7 +18,7 @@ import { SuggestionService } from '../suggestion.service';
 export class SearchComponent implements OnInit {
   productService = inject(ProductService);
   nameProduct: any = null;
-  foundProducts: any;
+  foundProducts: any = [];
   errorMessage: any;
   successMessage: any;
   selectedProduct: any = null;

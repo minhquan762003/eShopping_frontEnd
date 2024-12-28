@@ -45,3 +45,13 @@ h5 {
 .bg-product {
     width: 100%;
 }
+
+.image-product {
+    width: 100%;
+    /* Đặt chiều rộng ảnh theo container */
+    height: 200px;
+    /* Chiều cao cố định */
+    object-fit: fill;
+    /* Kéo giãn ảnh */
+    border-radius: 8px;
+}

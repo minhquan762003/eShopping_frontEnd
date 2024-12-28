@@ -9,6 +9,8 @@ import { OrderService } from '../order.service';
 import { OrderitemService } from '../orderitem.service';
 import { error } from 'console';
 import { FormsModule } from '@angular/forms';
+import { SuggestionService } from '../suggestion.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -31,6 +33,12 @@ export class ProductComponent implements OnInit {
   selectedProduct:any=null;
   errorMessage: any;
   successMessage:any;
+  searchQuery: string = '';
+  suggestionService = inject(SuggestionService);
+  suggestions: string[] = [];
+  router = inject(Router);
+  dataCategory:any;
+
   ngOnInit(): void {
     this.getAllProducts();
     this.currentUser = this.authService.getCurrentUser();
@@ -94,5 +102,44 @@ export class ProductComponent implements OnInit {
     },error=>{
       console.log("Loi id");
     })
+  }
+
+  onSearchChange(query: string) {
+    this.searchQuery = query;
+    if (query.trim()) {
+      this.suggestionService.getSuggestions(query).subscribe(response => {
+        this.suggestions = response.suggestions;
+      });
+    } else {
+      this.suggestions = [];
+    }
+  }
+
+    
+  toSearch(nameProduct:string){
+    this.router.navigate(['search']);
+    localStorage.setItem('searchName', nameProduct);
+  }
+  selectSuggestion(suggestion: string) {
+    this.searchQuery = suggestion;
+    this.suggestions = []; // Ẩn gợi ý sau khi chọn
+  }
+
+  onRadioChange(event: Event): void {
+    const radio = event.target as HTMLInputElement;
+    if (radio.checked) {
+      if(radio.value == "all"){
+        this.getAllProducts();
+      }
+      else{
+        this.productService.findByCategory(radio.value).subscribe((res)=>{
+          this.dataCategory = res;
+          this.products = this.dataCategory.data;
+        });
+      }
+
+    } else {
+      this.getAllProducts();
+    }
   }
 }

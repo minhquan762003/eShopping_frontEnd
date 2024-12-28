@@ -6,11 +6,14 @@ import { CommonModule } from '@angular/common';
 import { OrderitemService } from '../orderitem.service';
 import { error } from 'console';
 import { Router } from '@angular/router';
+import { SuggestionService } from '../suggestion.service';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-order',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HttpClientModule, FormsModule],
   templateUrl: './order.component.html',
   styleUrl: './order.component.css'
 })
@@ -20,14 +23,18 @@ export class OrderComponent implements OnInit {
   authService = inject(AuthService);
   currentUser: any = null;
   orderItemService = inject(OrderitemService);
+  suggestions: string[] = [];
 
   orderItems: any;
   selectedOrderItemId: any;
   selectedOrderId: any;
   successMessage: any;
+  errorMessage:any;
   respone: any;
-
-  orderList:  any[] = [];
+  searchQuery: string = '';
+  suggestionService = inject(SuggestionService);
+  orderList: any = [];
+  dataCategory: any;
   constructor(private router: Router) { }
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
@@ -88,7 +95,7 @@ export class OrderComponent implements OnInit {
       (res) => {
         console.log(res);
         this.respone = res;
-  
+
         if (this.respone.status === 'ok') {
           this.successMessage = 'Hủy mặt hàng thành công';
           // Cập nhật danh sách order items
@@ -100,17 +107,19 @@ export class OrderComponent implements OnInit {
       }
     );
   }
-  
+
   deleteSelectedOrderByOrderId(orderId: any) {
     this.orderService.deleteOrderByOrderId(orderId).subscribe(
       (res) => {
         console.log(res);
         this.respone = res;
-  
+
         if (this.respone.status === 'ok') {
           this.successMessage = 'Xóa đơn hàng thành công';
           // Cập nhật danh sách đơn hàng
           this.getAllOrdersByUserId(this.currentUser.userId);
+        }else{
+          this.errorMessage = 'Bạn cần phải hủy các mặt hàng trước khi xóa đơn hàng.';
         }
       },
       (err) => {
@@ -118,5 +127,22 @@ export class OrderComponent implements OnInit {
       }
     );
   }
-  
+  onSearchChange(query: string) {
+    this.searchQuery = query;
+    if (query.trim()) {
+      this.suggestionService.getSuggestions(query).subscribe(response => {
+        this.suggestions = response.suggestions;
+      });
+    } else {
+      this.suggestions = [];
+    }
+  }
+  toSearch(nameProduct:string){
+    this.router.navigate(['search']);
+    localStorage.setItem('searchName', nameProduct);
+  }
+  selectSuggestion(suggestion: string) {
+    this.searchQuery = suggestion;
+    this.suggestions = []; // Ẩn gợi ý sau khi chọn
+  }
 }

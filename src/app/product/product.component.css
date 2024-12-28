@@ -1,17 +1,32 @@
-.image-product{
+.image-product {
     width: 400px;
     height: 200px;
 }
-.bg-custom{
+
+.bg-custom {
     background-color: #f2e2aa;
 }
-.color-text{
-    color:  #58a1d9;;
+
+.color-text {
+    color: #58a1d9;
+    ;
 }
-.bg-product{
+
+.bg-product {
     background-color: #f2c070;
 }
-.logo-size{
+
+.logo-size {
     width: 100px;
     height: 100px;
+}
+
+.image-product {
+    width: 100%;
+    /* Đặt chiều rộng ảnh theo container */
+    height: 200px;
+    /* Chiều cao cố định */
+    object-fit: fill;
+    /* Kéo giãn ảnh */
+    border-radius: 8px;
 }
