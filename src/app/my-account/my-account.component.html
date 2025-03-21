@@ -1,0 +1,100 @@
+<div class="container mt-3">
+    <div class="alert alert-success" *ngIf="successMessage">{{successMessage}}</div>
+    <div class="float-start">
+        <div>
+            <h3 class="text-secondary"><b>Hồ sơ của tôi</b></h3>
+        </div>
+
+        <div class="text-secondary mt-4" *ngIf="currentUser">
+
+            <h5>Tên đăng nhập: <b>{{currentUser.username}}</b></h5>
+
+            <form #updateForm="ngForm" (ngSubmit)="update(updateForm.value)">
+
+                <div class="d-flex mt-3">
+                    <div class="form-floating mb-3 ms-3">
+
+                        <input type="text" class="form-control" name="name" id="formId1" placeholder="" required ngModel
+                            minlength="5" [(ngModel)]="name" />
+                        <label for="formId1">Tên hiển thị</label>
+                        <div *ngIf="updateForm.submitted || updateForm.controls['name']?.touched">
+                            <div *ngIf="updateForm.controls['name']?.errors?.['required']"
+                                class="text-danger text-center">
+                                Tên hiển thị là bắt buộc
+                            </div>
+                            <div *ngIf="updateForm.controls['name']?.errors?.['minlength']"
+                                class="text-danger text-center">
+                                Tối thiểu 5 kí tự
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h5>Email: <b>{{currentUser.email}}</b></h5>
+
+
+                <div class="d-flex mt-3">
+                    <div class="form-floating mb-3 ms-3">
+
+                        <input type="text" class="form-control" name="number" id="formId1" placeholder="" required ngModel
+                            minlength="10" [(ngModel)]="number" />
+                        <label for="formId1">Số điện thoại</label>
+                        <div *ngIf="updateForm.submitted || updateForm.controls['number']?.touched">
+                            <div *ngIf="updateForm.controls['number']?.errors?.['required']"
+                                class="text-danger text-center">
+                                Số điện thoại là bắt buộc
+                            </div>
+                            <div *ngIf="updateForm.controls['number']?.errors?.['minlength']"
+                                class="text-danger text-center">
+                                Tối thiểu 10 số
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h5>Số điện thoại: <b>{{currentUser.number}}</b> </h5>
+                <div class="d-flex">
+                    <h5 class=" me-3">Giới tính:</h5>
+                    <div class="form-check me-3">
+                        <input class="form-check-input" type="radio" name="gender" id="male" [(ngModel)]="gender"
+                            [value]="0" />
+                        <label class="form-check-label" for="male">Nam</label>
+                    </div>
+                    <div class="form-check me-3">
+                        <input class="form-check-input" type="radio" name="gender" id="female" [(ngModel)]="gender"
+                            [value]="1" />
+                        <label class="form-check-label" for="female">Nữ</label>
+                    </div>
+                    <div class="form-check me-3">
+                        <input class="form-check-input" type="radio" name="gender" id="other" [(ngModel)]="gender"
+                            [value]="2" />
+                        <label class="form-check-label" for="other">Khác</label>
+                    </div>
+                </div>
+
+
+
+                <!-- <div class="form-floating mb-3">
+                    <input type="date" class="form-control" name="birthDay" id="formId1" placeholder="" required
+                        ngModel [(ngModel)]="birthDay"/>
+                    <label for="formId1">birthDay</label>
+                    <div *ngIf="updateForm.submitted || updateForm.controls['birthDay']?.touched">
+                        <div *ngIf="updateForm.controls['birthDay']?.errors?.['required']"
+                            class="text-danger text-center">
+                            Ngày sinh là bắt buộc
+                        </div>
+                    </div>
+                </div> -->
+
+                <h5>Ngày sinh: <b>{{currentUser.birthDay | date:'dd/MM/yyyy'}}</b></h5>
+
+                <input type="submit" value="Lưu thông tin" class="mt-3 btn btn-outline-secondary float-end">
+
+            </form>
+        </div>
+    </div>
+
+    <div class="float-end">
+        <!-- <h3>img</h3> -->
+    </div>
+</div>

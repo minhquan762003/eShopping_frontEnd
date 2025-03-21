@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-
+import { MyAccountComponent } from './my-account/my-account.component';
 export const routes: Routes = [
     {
         path:'',
-        redirectTo: '/home',
+        redirectTo: '/login',
         pathMatch:'full',
     },
     {
@@ -28,5 +28,17 @@ export const routes: Routes = [
         path:'admin',
         loadComponent:()=>import('./admin/admin.component').then(m=>m.AdminComponent)
 
+    },{
+        path:'user',
+        loadComponent:()=>import('./user/user.component').then(m=>m.UserComponent)
+    },{
+        path:'my-account',
+        component:MyAccountComponent
+    },{
+        path:'alerts',
+        loadComponent:()=>import('./alerts/alerts.component').then(m=>m.AlertsComponent)
+    },{
+        path:'bills',
+        loadComponent:()=>import('./bills/bills.component').then(m=>m.BillsComponent)
     }
 ];

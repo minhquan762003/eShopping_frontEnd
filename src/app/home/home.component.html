@@ -4,49 +4,29 @@
             <img src="assets/online_shop_16.jpg" alt="logo" class="rounded img-thumbnail logo-size">
         </a>
 
-        <div *ngIf="currentUser; else guestTemplate">
-            <h1 class="text-primary">xin chào, {{currentUser.username}}</h1>
+        <div >
+            <h1 class="text-primary shadow rounded">xin chào, {{currentUser?.name}}</h1>
             <ul class="navbar-nav ms-auto">
+                
                 <li class="nav-item">
-                    <a class="nav-link " href="product">Sản phẩm</a>
+                    <a class="nav-link btn btn-outline-light" href="product">Sản phẩm</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text" href="order">Giỏ hàng</a>
+                    <a class="nav-link text btn btn-outline-light" href="order">Giỏ hàng</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Đăng xuất</a>
+                    <a class="nav-link text btn btn-outline-light" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Đăng xuất</a>
                 </li>
 
             </ul>
         </div>
-        <ng-template #guestTemplate>
-            <div class="text-primary">
-                <h1>Chào mừng bạn!</h1>
-                <p>Đăng nhập hoặc đăng ký để bắt đầu mua sắm nào!</p>
-            </div>
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link " href="product" data-bs-toggle="modal" data-bs-target="#warningLoginModal">Sản
-                        phẩm</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#warningLoginModal">Giỏ hàng</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="register">Đăng ký</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="login">Đăng nhập</a>
-                </li>
-            </ul>
-        </ng-template>
 
 
-        <div class="input-group w-25 position-relative">
+        <div class="input-group w-25 position-relative shadow">
             <input type="search" class="form-control rounded" placeholder="Tìm kiếm sản phẩm..."
                 [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange($event)" aria-label="Search"
                 aria-describedby="search-addon" />
-            <button type="button" class="btn btn-outline-success" (click)="toSearch(searchQuery)">
+            <button type="button" class="btn btn-outline-success rounded shadow" (click)="findProductByName(searchQuery)">
                 Tìm
             </button>
 
@@ -57,6 +37,8 @@
                     {{ suggestion }}
                 </li>
             </ul>
+            <a href="user" ><img class="user-background rounded shadow"
+                    src="assets/user-icon-vector.jpg" alt=""></a>
         </div>
 
 
@@ -100,17 +82,23 @@
 
     </div>
     <div class="container bg-product shadow rounded flex-grow-1">
-        <div class="row">
+        <div class=" row">
+            <!-- <h3 class="text-center text-danger">Best Seller</h3> -->
+            <div class="col-md-3 mt-3">
+                <div class="card shadow rounded">
+                    <h5 class="card-title"></h5>
+                </div>
+            </div>
+        </div>
+        <div class="row ">
             <div class="col-md-4 mt-3" *ngFor="let product of products">
                 <div class="card shadow rounded">
                     <img src={{product.imageUrl}} class="card-img-top image-product" alt="Sản phẩm 2">
                     <div class="card-body">
                         <h5 class="card-title">{{product.name}}</h5>
                         <p class="card-text">{{product.description}}</p>
-                        <p class="card-text">Giá bán 1kg: {{product.price}}.000</p>
-                        <div *ngIf="currentUser">
-                            <a href="product" class="btn btn-primary">Mua ngay</a>
-                        </div>
+                        <p class="card-text">Giá: {{product.price|number:'1.0-0'}},000</p>
+                        <a href="product" class="btn btn-primary">Mua ngay</a>
                     </div>
                 </div>
             </div>
@@ -147,28 +135,3 @@
     </div>
 </div>
 
-
-<div class="modal fade" id="warningLoginModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title text-warning">Thông báo</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <!-- Modal body -->
-            <div class="modal-body">
-                Bạn phải đăng nhập để sử dụng chức năng này.
-            </div>
-
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button class="btn btn-warning" (click)="logIn()" data-bs-dismiss="modal">Đăng nhập</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Để sau</button>
-            </div>
-
-        </div>
-    </div>
-</div>

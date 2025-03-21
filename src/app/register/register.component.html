@@ -1,14 +1,16 @@
 <div class="container">
     <div class="d-flex justify-content-center align-items-center vh-100">
-        <div class="card w-50 h-75 shadow rounded">
+        <div class="card w-50 shadow rounded">
             <div class="card-header">
                 <h1 class="text-success text-center">Register</h1>
             </div>
 
-            <div class="card-body mt-5">
+            <div class="card-body">
                 <div *ngIf="errorMessage" class="text-danger mt-3 text-center">
                     {{errorMessage}}
                 </div>
+                <div *ngIf="successMessage" class="alert alert-success mt-3"> {{ successMessage }} </div>
+
                 <form #registerForm="ngForm" (ngSubmit)="register(registerForm.value)">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" name="username" id="formId1" placeholder="" required
@@ -20,6 +22,21 @@
                                 Username là bắt buộc
                             </div>
                             <div *ngIf="registerForm.controls['username']?.errors?.['minlength']"
+                                class="text-danger text-center">
+                                Tối thiểu 5 kí tự
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="name" id="formId1" placeholder="" required ngModel
+                            minlength="5" />
+                        <label for="formId1">Tên hiển thị</label>
+                        <div *ngIf="registerForm.submitted || registerForm.controls['name']?.touched">
+                            <div *ngIf="registerForm.controls['name']?.errors?.['required']"
+                                class="text-danger text-center">
+                                Tên hiển thị là bắt buộc
+                            </div>
+                            <div *ngIf="registerForm.controls['name']?.errors?.['minlength']"
                                 class="text-danger text-center">
                                 Tối thiểu 5 kí tự
                             </div>
@@ -65,6 +82,54 @@
                                 định dạng </div>
                         </div>
                     </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="number" id="formId2" placeholder="" required
+                            ngModel minlength="10" />
+                        <label for="formId2">Số điện thoại</label>
+                        <div *ngIf="registerForm.submitted || registerForm.controls['number']?.touched">
+                            <div *ngIf="registerForm.controls['number']?.errors?.['required']"
+                                class="text-danger text-center">
+                                Số điện thoại là bắt buộc
+                            </div>
+                            <div *ngIf="registerForm.controls['number']?.errors?.['minlength']"
+                                class="text-danger text-center">
+                                Tối thiểu 10 số
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="date" class="form-control" name="birthDay" id="formId1" placeholder="" required
+                            ngModel />
+                        <label for="formId1">birthDay</label>
+                        <div *ngIf="registerForm.submitted || registerForm.controls['birthDay']?.touched">
+                            <div *ngIf="registerForm.controls['birthDay']?.errors?.['required']"
+                                class="text-danger text-center">
+                                Ngày sinh là bắt buộc
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-center">
+                        <h6 class="me-4">Giới tính: </h6>
+                        <div class="form-check me-4 ">
+                            <input class="form-check-input" type="radio" name="gender" id="" checked value="0" />
+                            <label class="form-check-label" for=""> Nam </label>
+                        </div>
+                        <div class="form-check me-4">
+                            <input class="form-check-input" type="radio" name="gender" id="" value="1" />
+                            <label class="form-check-label" for="">
+                                Nữ
+                            </label>
+                        </div>
+                        <div class="form-check me-4">
+                            <input class="form-check-input" type="radio" name="gender" id=""  value="2"/>
+                            <label class="form-check-label" for="">
+                                Khác
+                            </label>
+                        </div>
+                    </div>
+
                     <a href="login" class="text-primary">
                         <h6 class="text-center">Bạn đã có tài khoản rồi sao, hãy bấm vô đây để đăng nhập
                             nhé!</h6>

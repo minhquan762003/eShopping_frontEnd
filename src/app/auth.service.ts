@@ -1,48 +1,70 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { User } from './user';
 import { CookieService } from 'ngx-cookie-service';
+import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  
-  private currentUser: any = null;
-  private token: any;
-  constructor(private cookieService: CookieService) {
-    if (this.isBrowser()) {
-      const savedUser = this.cookieService.get('currentUser');
-      if (savedUser) {
-        this.currentUser = JSON.parse(savedUser);
-      }
+  private currentUser: User | undefined;
+  private router = inject(Router);
+
+  constructor() { }
+
+  setToken(token: string) {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem("accessToken", token);
     }
   }
-  private isBrowser(): boolean {
-    return typeof window !== 'undefined' && typeof window.document !== 'undefined';
+
+  getToken(): string | null {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem("accessToken");
+    }
+    return null;
   }
 
-  setCurrentUser(user: User) {
-    this.currentUser = user;
+  removeToken() {
+    if(typeof window !== 'undefined' && window.localStorage){
+
+      localStorage.removeItem("accessToken");
+    }
   }
 
-  getCurrentUser() {
-    return this.currentUser;
+  getUserInformation() {
+    const token = this.getToken();
+    if (token) {
+      const decoded = jwtDecode(token);
+
+      return decoded;
+    }
+    return null;
+  }
+  setCurrentUser(currentUser: User | undefined) {
+    this.currentUser = currentUser;
+    if (currentUser && typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    } else {
+      localStorage.removeItem("currentUser");
+    }
+  }
+
+  getCurrentUser(): User | undefined {
+    if (!this.currentUser && typeof window !== 'undefined' && window.localStorage) {
+      const storedUser = localStorage.getItem("currentUser");
+      if (storedUser) {
+        this.currentUser = JSON.parse(storedUser);
+      }
+    }
+    return this.currentUser ?? undefined;
   }
 
   logOut() {
-    this.currentUser = null;
-    this.cookieService.delete('currentUser');
-  }
-
-  setToken(token: any) {
-    this.token = token;
-  }
-
-  getToken() {
-
-    if (this.currentUser) {
-      this.token = this.currentUser.token;
-      return this.token;
+    if(typeof window !== 'undefined' && window.localStorage){
+      typeof window !== 'undefined' && window.localStorage
     }
   }
+  
 }

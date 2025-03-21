@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { SuggestionService } from '../suggestion.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { User } from '../user';
 
 @Component({
   selector: 'app-order',
@@ -21,7 +22,7 @@ export class OrderComponent implements OnInit {
   orderService = inject(OrderService);
   orders: any;
   authService = inject(AuthService);
-  currentUser: any = null;
+  currentUser: User | undefined;
   orderItemService = inject(OrderitemService);
   suggestions: string[] = [];
 
@@ -38,14 +39,15 @@ export class OrderComponent implements OnInit {
   constructor(private router: Router) { }
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
-    if (this.currentUser && this.currentUser.userId) {
+    if (this.currentUser ) {
+
       this.getAllOrdersByUserId(this.currentUser.userId);
     } else {
-      console.error;
+      this.authService.logOut();
     }
   }
 
-  getAllOrdersByUserId(userId: number) {
+  getAllOrdersByUserId(userId: any) {
     this.orderService.getAllOrdersByUserId(userId).subscribe((res) => {
       this.orders = res;
       this.orderList = this.orders
@@ -117,7 +119,7 @@ export class OrderComponent implements OnInit {
         if (this.respone.status === 'ok') {
           this.successMessage = 'Xóa đơn hàng thành công';
           // Cập nhật danh sách đơn hàng
-          this.getAllOrdersByUserId(this.currentUser.userId);
+          this.getAllOrdersByUserId(this.currentUser?.userId);
         }else{
           this.errorMessage = 'Bạn cần phải hủy các mặt hàng trước khi xóa đơn hàng.';
         }

@@ -16,42 +16,50 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
+  userInfo:any;
   currentUser: User|undefined;
+
   userService = inject(UserService);
-  authService = inject(AuthService)
+  authService = inject(AuthService);
   data :any;
   errorMessage: string | null = null;
   successMessage: string | null = null;
+  
   ngOnInit(): void {
   }
   constructor(private router: Router, private cookieService: CookieService) { }
 
   login(login:  { username: string, password: string }) {
     this.userService.login(login.username, login.password).subscribe(res => {
-      console.log(res);
       this.data = res;
-      const userData = this.data.data as {createdAt: string, email: string, password: string, updatedAt: string, userId: number, username: string,token:string}
+
+      this.authService.setToken(this.data.data);
+      this.userInfo = this.authService.getUserInformation();
+      // console.log(this.userInfo);
+      const userData = this.userInfo as {birthDay: number,createdAt: string, email: string, gender:number, name:string,number:string, password: string, role:string,token:string, updatedAt: string, sub: number, username: string,  }
+      const birthDay = new Date(userData.birthDay);
       this.currentUser = new User(
         userData.username,
         userData.password,
         userData.email,
+        userData.gender,
         userData.token,
-        userData.userId,
+        userData.name,
+        userData.number,
+        birthDay,
+        userData.sub,
         new Date(userData.createdAt),
         new Date(userData.updatedAt)
       );
 
-      // console.log(this.currentUser);
       this.authService.setCurrentUser(this.currentUser);
+      console.log(this.authService.getCurrentUser());
       this.router.navigate(['home']);
       this.errorMessage= null;
       this.successMessage = 'Đăng nhập thành công!';
 
       const rememberMeChecked = (document.getElementById('flexCheckDefault') as HTMLInputElement).checked;
       if (rememberMeChecked) {
-        // Lưu username và token vào cookie
-        // this.cookieService.set('username', userData.username, 30); // Lưu cookie username, hết hạn sau 30 ngày
-        // this.cookieService.set('token', userData.token, 30); // Lưu cookie token, hết hạn sau 30 ngày
         this.cookieService.set('currentUser', JSON.stringify(this.currentUser), 30); 
       }else{
         this.cookieService.set('currentUser', JSON.stringify(this.currentUser), 1/24); 

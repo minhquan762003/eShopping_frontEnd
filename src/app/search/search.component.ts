@@ -36,7 +36,7 @@ export class SearchComponent implements OnInit {
     this.nameProduct = localStorage.getItem('searchName');
     // console.log(this.nameProduct);
     this.findProductByName(this.nameProduct);
-    this.currentUser = this.authService.getCurrentUser();
+    // this.currentUser = this.authService.getCurrentUser();
 
   }
   findProductByName(productName: string) {
@@ -114,6 +114,7 @@ export class SearchComponent implements OnInit {
   }
   selectSuggestion(suggestion: string) {
     this.searchQuery = suggestion;
-    this.suggestions = []; // Ẩn gợi ý sau khi chọn
+    this.suggestions = [];
   }
+  
 }

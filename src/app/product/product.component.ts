@@ -11,6 +11,7 @@ import { error } from 'console';
 import { FormsModule } from '@angular/forms';
 import { SuggestionService } from '../suggestion.service';
 import { Router } from '@angular/router';
+import { User } from '../user';
 
 
 @Component({
@@ -23,31 +24,35 @@ import { Router } from '@angular/router';
 export class ProductComponent implements OnInit {
   productService = inject(ProductService);
   products: Product[] | undefined;
-  currentUser: any = null;
+  currentUser: User | undefined;
   authService = inject(AuthService);
   orderService = inject(OrderService);
   orderItemService = inject(OrderitemService)
   amount: number = 1;
   newOrderId: any;
   data: any;
-  selectedProduct:any=null;
+  selectedProduct: any = null;
   errorMessage: any;
-  successMessage:any;
+  successMessage: any;
   searchQuery: string = '';
   suggestionService = inject(SuggestionService);
   suggestions: string[] = [];
   router = inject(Router);
-  dataCategory:any;
-
+  dataCategory: any;
+  userId:any;
   ngOnInit(): void {
-    this.getAllProducts();
+    
     this.currentUser = this.authService.getCurrentUser();
-
+    // console.log(this.currentUser?.userId);
+    if(this.currentUser){
+      this.getAllProducts();
+    }else{
+      this.authService.logOut();
+    }
   }
   getAllProducts() {
     this.productService.getAllProducts().subscribe(res => {
       this.products = res;
-      console.log(this.products)
     })
   }
   increaseTotalAmount() {
@@ -60,8 +65,9 @@ export class ProductComponent implements OnInit {
   }
 
   saveOrder(productId: any, price: any) {
+    this.userId = this.currentUser?.userId;
     const orderPayload = {
-      user: { userId: this.currentUser.userId },
+      user: { userId: this.userId },
       totalAmount: this.amount, status: "PENDING", createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -72,7 +78,7 @@ export class ProductComponent implements OnInit {
       console.log(this.newOrderId);
       console.log(productId);
       this.saveOrderItem(this.newOrderId, productId, this.amount, price);
-    },error=>{
+    }, error => {
       this.errorMessage = "Đặt hàng thất bại";
       console.log(error);
     });
@@ -93,13 +99,13 @@ export class ProductComponent implements OnInit {
       console.log(error)
     }
   }
-  getProductBySelectedProductId(id:any){
-    this.productService.findByProductId(id).subscribe((res)=>{
+  getProductBySelectedProductId(id: any) {
+    this.productService.findByProductId(id).subscribe((res) => {
       this.selectedProduct = res;
       console.log(this.selectedProduct.data);
       this.successMessage = null;
       this.errorMessage = null;
-    },error=>{
+    }, error => {
       console.log("Loi id");
     })
   }
@@ -115,8 +121,8 @@ export class ProductComponent implements OnInit {
     }
   }
 
-    
-  toSearch(nameProduct:string){
+
+  toSearch(nameProduct: string) {
     this.router.navigate(['search']);
     localStorage.setItem('searchName', nameProduct);
   }
@@ -128,11 +134,11 @@ export class ProductComponent implements OnInit {
   onRadioChange(event: Event): void {
     const radio = event.target as HTMLInputElement;
     if (radio.checked) {
-      if(radio.value == "all"){
+      if (radio.value == "all") {
         this.getAllProducts();
       }
-      else{
-        this.productService.findByCategory(radio.value).subscribe((res)=>{
+      else {
+        this.productService.findByCategory(radio.value).subscribe((res) => {
           this.dataCategory = res;
           this.products = this.dataCategory.data;
         });

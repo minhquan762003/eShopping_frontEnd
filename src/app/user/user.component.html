@@ -1,0 +1,68 @@
+<nav class=" navbar navbar-expand-lg bg-custom shadow ">
+    <div class="container-fluid">
+        <a class="navbar-brand shadow" href="home">
+            <img src="assets/online_shop_16.jpg" alt="logo" class="rounded img-thumbnail logo-size">
+        </a>
+        <div>
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-light " href="home">Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-light" href="product">Sản phẩm</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-light" href="order">Giỏ hàng</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="input-group w-25 position-relative">
+        <input type="search" class="form-control rounded" placeholder="Tìm kiếm sản phẩm..." [(ngModel)]="searchQuery"
+            (ngModelChange)="onSearchChange($event)" aria-label="Search" aria-describedby="search-addon" />
+        <button type="button" class="btn btn-outline-success" (click)="toSearch(searchQuery)">
+            Tìm
+        </button>
+
+        <!-- Danh sách gợi ý -->
+        <ul class="list-group position-absolute mt-5 w-100" *ngIf="suggestions.length > 0">
+            <li class="list-group-item list-group-item-action" *ngFor="let suggestion of suggestions"
+                (click)="selectSuggestion(suggestion)">
+                {{ suggestion }}
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container d-flex align-items-start mt-3">
+    <div class="me-3"*ngIf="currentUser">
+        <h5 class="text-center">{{currentUser.name}}</h5>
+        <div class="list-group mt-3">
+            <a class="list-group-item list-group-item-action" [routerLink]="'my-account'" routerLinkActive="active"
+                (click)="setActiveSection('account')">
+                Tài khoản của tôi
+            </a>
+            <a href="" class="list-group-item list-group-item-action" [routerLink]="'bills'" routerLinkActive="active"
+                (click)="setActiveSection('bills')">Đơn mua</a>
+            <a href="" class="list-group-item list-group-item-action" [routerLink]="'alerts'" routerLinkActive="active"
+                (click)="setActiveSection('alerts')">Thông báo</a>
+        </div>
+    </div>
+    <div class="container bg-product shadow rounded flex-grow-1">
+        <div *ngIf="activeSection === 'account'">
+            <app-my-account></app-my-account>
+        </div>
+        <div *ngIf="activeSection === 'bills' ">
+            <app-bills></app-bills>
+        </div>
+        <div *ngIf="activeSection === 'alerts' ">
+            <app-alerts></app-alerts>
+        </div>
+    </div>
+
+</div>

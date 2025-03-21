@@ -6,77 +6,87 @@ import { ProductService } from '../product.service';
 import { Product } from '../product';
 import { FormsModule } from '@angular/forms';
 import { SuggestionService } from '../suggestion.service';
+import { User } from '../user';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
-export class HomeComponent implements OnInit{
-  currentUser:any = null;
+export class HomeComponent implements OnInit {
+  currentUser: User | undefined;
   authService = inject(AuthService);
   router = inject(Router);
   productService = inject(ProductService);
-  products : Product[] | undefined;
+  products: Product[] | undefined;
   suggestionService = inject(SuggestionService);
   searchQuery: string = '';
   suggestions: string[] = [];
-
-  dataCategory:any;
+  foundProducts: any = [];
+  dataCategory: any;
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
-    // console.log(this.currentUser);
-    this.getAllProducts();
-  }
-  logOut(){
-    this.authService.logOut();
-    this.router.navigate(['home']);
-    this.currentUser = null;
-  }
-  logIn(){
-    this.router.navigate(['login'])
+    if (this.currentUser) { this.getAllProducts(); }
+    else {
+      this.authService.logOut();
+    }
   }
 
-  getAllProducts(){
-    this.productService.getAllProducts().subscribe(res=>{
+  logOut(){
+    this.authService.logOut();
+  }
+
+  getAllProducts() {
+    this.productService.getAllProducts().subscribe(res => {
       this.products = res;
-      // console.log(this.products)
+
     })
   }
-  
-  toSearch(nameProduct:string){
+
+  toSearch(nameProduct: string) {
     this.router.navigate(['search']);
     localStorage.setItem('searchName', nameProduct);
   }
   
+  findProductByName(productName: string) {
+    this.productService.findByProductName(productName).subscribe((res) => {
+      console.log(res);
+      // this.foundProducts = res;
+      // this.products = this.foundProducts;
+    }, error => {
+      console.log("Loi tim kiem");
+    }
+    );
+  }
 
   onSearchChange(query: string) {
     this.searchQuery = query;
     if (query.trim()) {
       this.suggestionService.getSuggestions(query).subscribe(response => {
-        this.suggestions = response.suggestions;
+        this.suggestions = response;
       });
     } else {
       this.suggestions = [];
     }
   }
 
+
   selectSuggestion(suggestion: string) {
     this.searchQuery = suggestion;
-    this.suggestions = []; // Ẩn gợi ý sau khi chọn
+    this.suggestions = [];
   }
 
   onRadioChange(event: Event): void {
     const radio = event.target as HTMLInputElement;
     if (radio.checked) {
-      if(radio.value == "all"){
+      if (radio.value == "all") {
         this.getAllProducts();
       }
-      else{
-        this.productService.findByCategory(radio.value).subscribe((res)=>{
+      else {
+        this.productService.findByCategory(radio.value).subscribe((res) => {
           this.dataCategory = res;
           this.products = this.dataCategory.data;
         });
@@ -86,5 +96,5 @@ export class HomeComponent implements OnInit{
       this.getAllProducts();
     }
   }
-  
+
 }

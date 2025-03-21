@@ -16,7 +16,6 @@ export class ProductService {
 
   private createHeaders(): HttpHeaders {
     const token = this.authService.getToken(); 
-    // console.log(token);
     return new HttpHeaders({
       Authorization: `Bearer ${token}` 
     });
@@ -25,9 +24,9 @@ export class ProductService {
     const headers = this.createHeaders();
     return this.http.get<Product[]>(`${this.baseUrl}/getAllProducts`, { headers });
   }
-  findByProductName(name: string) {
+  findByProductName(keyword: string) {
     const headers = this.createHeaders();
-    return this.http.get(`${this.baseUrl}/search?name=${name}`, { headers });
+    return this.http.get(`${this.baseUrl}/search?keyword=${keyword}`, { headers });
   }
   findByProductId(productId:any){
     const headers = this.createHeaders();

@@ -81,7 +81,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{product.name}}</h5>
                         <p class="card-text">{{product.description}}</p>
-                        <p class="card-text">Giá bán 1kg: {{product.price}}.000</p>
+                        <p class="card-text">Giá: {{product.price|number:'1.0-0'}},000</p>
                         <a class="btn btn-outline-primary float-end" data-bs-toggle="modal"
                             data-bs-target="#addCartModal"
                             (click)="getProductBySelectedProductId(product.productId)">Thêm vào giỏ hàng</a>
